@@ -1,11 +1,8 @@
-package africa.semicolon.gemstube.services;
+package com.mteflix.capstonemateflixbackend.auth;
 
-import africa.semicolon.gemstube.config.MailConfig;
-import africa.semicolon.gemstube.dtos.request.EmailRequest;
-import africa.semicolon.gemstube.dtos.response.EmailResponse;
+
+import com.mteflix.capstonemateflixbackend.config.MailConfig;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -23,7 +20,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 @Service
 @Primary
 @AllArgsConstructor
-public class GemsTubeMailService implements MailService{
+public class MateFlixMailService implements MailService{
     private final MailConfig mailConfig;
 
     @Override

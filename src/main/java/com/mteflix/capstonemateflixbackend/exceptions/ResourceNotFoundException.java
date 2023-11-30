@@ -1,6 +1,6 @@
-package africa.semicolon.gemstube.exceptions;
+package com.mteflix.capstonemateflixbackend.exceptions;
 
-public class ResourceNotFoundException extends GemsTubeException{
+public class ResourceNotFoundException extends MateFlixException {
     public ResourceNotFoundException(String message) {
         super(message);
     }

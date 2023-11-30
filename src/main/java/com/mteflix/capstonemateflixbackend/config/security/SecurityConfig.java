@@ -1,11 +1,12 @@
-package africa.semicolon.gemstube.config.security;
+package com.mteflix.capstonemateflixbackend.config.security;
 
 
-import africa.semicolon.gemstube.config.security.filters.GemsTubeAuthenticationFilter;
-import africa.semicolon.gemstube.config.security.filters.GemsTubeAuthorizationFilter;
-import africa.semicolon.gemstube.config.security.services.JwtService;
-import africa.semicolon.gemstube.config.security.utils.SecurityUtils;
-import africa.semicolon.gemstube.models.Authority;
+
+import com.mteflix.capstonemateflixbackend.config.security.filters.MateFlixAuthenticationFilter;
+import com.mteflix.capstonemateflixbackend.config.security.filters.MateFlixAuthorizationFilter;
+import com.mteflix.capstonemateflixbackend.config.security.services.JwtService;
+import com.mteflix.capstonemateflixbackend.config.security.utils.SecurityUtils;
+import com.mteflix.capstonemateflixbackend.user.Authority;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -19,7 +20,7 @@ import org.springframework.web.cors.CorsConfiguration;
 
 import java.util.List;
 
-import static africa.semicolon.gemstube.config.security.utils.SecurityUtils.getPublicEndpoints;
+
 
 @Configuration
 @AllArgsConstructor
@@ -27,7 +28,7 @@ public class SecurityConfig {
 
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
-    private final GemsTubeAuthorizationFilter authorizationFilter;
+    private final MateFlixAuthorizationFilter authorizationFilter;
 
 
 
@@ -40,8 +41,8 @@ public class SecurityConfig {
                         corsConfiguration.setAllowedMethods(List.of("POST", "PUT", "GET"));
                         corsConfiguration.setAllowedOrigins(List.of("*"));
                    })
-                   .addFilterAt(new GemsTubeAuthenticationFilter(authenticationManager, jwtService), UsernamePasswordAuthenticationFilter.class)
-                   .addFilterBefore(authorizationFilter, GemsTubeAuthenticationFilter.class)
+                   .addFilterAt(new MateFlixAuthenticationFilter(authenticationManager, jwtService), UsernamePasswordAuthenticationFilter.class)
+                   .addFilterBefore(authorizationFilter, MateFlixAuthenticationFilter.class)
                    .authorizeHttpRequests(c->c.requestMatchers(HttpMethod.POST, getPublicEndpoints()).permitAll()
                            .requestMatchers(HttpMethod.GET, "/api/v1/user", "/api/v1/user/**").hasAnyAuthority(Authority.USER.name()))
                    .build();

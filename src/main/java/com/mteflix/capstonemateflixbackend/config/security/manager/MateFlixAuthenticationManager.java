@@ -1,6 +1,7 @@
 package com.mteflix.capstonemateflixbackend.config.security.manager;
 
-import africa.semicolon.gemstube.exceptions.UserAuthenticationFailedException;
+
+import com.mteflix.capstonemateflixbackend.exceptions.UserAuthenticationFailedException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Component;
 
 @AllArgsConstructor
 @Component
-public class GemsTubeAuthenticationManager implements AuthenticationManager {
+public class MateFlixAuthenticationManager implements AuthenticationManager {
     private final AuthenticationProvider authenticationProvider;
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {

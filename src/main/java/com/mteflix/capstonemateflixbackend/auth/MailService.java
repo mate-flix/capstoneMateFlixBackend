@@ -1,7 +1,5 @@
-package africa.semicolon.gemstube.services;
+package com.mteflix.capstonemateflixbackend.auth;
 
-import africa.semicolon.gemstube.dtos.request.EmailRequest;
-import africa.semicolon.gemstube.dtos.response.EmailResponse;
 
 public interface MailService {
     EmailResponse sendMail(EmailRequest emailRequest);

@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.exceptions;
+package com.mteflix.capstonemateflixbackend.exceptions;
 
 public class UserAuthenticationFailedException extends RuntimeException {
     public UserAuthenticationFailedException(String message) {

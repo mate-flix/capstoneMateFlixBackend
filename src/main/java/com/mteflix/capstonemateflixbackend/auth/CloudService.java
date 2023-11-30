@@ -1,10 +1,9 @@
-package africa.semicolon.gemstube.services;
+package com.mteflix.capstonemateflixbackend.auth;
 
-import africa.semicolon.gemstube.exceptions.MediaUploadException;
+
+import com.mteflix.capstonemateflixbackend.exceptions.MediaUploadException;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-
 public interface CloudService {
-    String upload(MultipartFile multipartFile) throws MediaUploadException;
+    String upload(MultipartFile multipartFile) throws MediaUploadException, MediaUploadException;
 }

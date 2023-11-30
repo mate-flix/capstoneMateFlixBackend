@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.config;
+package com.mteflix.capstonemateflixbackend.config;
 
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;

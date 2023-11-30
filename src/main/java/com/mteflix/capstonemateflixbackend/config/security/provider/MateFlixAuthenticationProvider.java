@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @AllArgsConstructor
-public class GemsTubeAuthenticationProvider implements AuthenticationProvider {
+public class MateFlixAuthenticationProvider implements AuthenticationProvider {
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 

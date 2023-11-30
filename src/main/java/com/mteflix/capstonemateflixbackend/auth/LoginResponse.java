@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.dtos.response;
+package com.mteflix.capstonemateflixbackend.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.dtos.request;
+package com.mteflix.capstonemateflixbackend.auth;
 
 
 import lombok.AllArgsConstructor;
@@ -8,7 +8,6 @@ import lombok.Setter;
 
 @Setter
 @Getter
-@NoArgsConstructor
 @AllArgsConstructor
 public class Recipient {
     private String email;

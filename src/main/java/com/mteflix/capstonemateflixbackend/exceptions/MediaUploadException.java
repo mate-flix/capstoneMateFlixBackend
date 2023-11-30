@@ -1,6 +1,6 @@
-package africa.semicolon.gemstube.exceptions;
+package com.mteflix.capstonemateflixbackend.exceptions;
 
-public class MediaUploadException extends GemsTubeException {
+public class MediaUploadException extends MateFlixException {
 
     public MediaUploadException(String message) {
         super(message);

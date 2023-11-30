@@ -1,13 +1,11 @@
-package africa.semicolon.gemstube.config.security.filters;
+package com.mteflix.capstonemateflixbackend.config.security.filters;
 
-import africa.semicolon.gemstube.config.security.services.JwtService;
-import africa.semicolon.gemstube.dtos.request.LoginRequest;
-import africa.semicolon.gemstube.dtos.response.LoginResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.mteflix.capstonemateflixbackend.auth.LoginRequest;
+import com.mteflix.capstonemateflixbackend.auth.LoginResponse;
+import com.mteflix.capstonemateflixbackend.config.security.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
@@ -26,7 +24,7 @@ import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
 @AllArgsConstructor
 @Slf4j
-public class GemsTubeAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
+public class MateFlixAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;
 

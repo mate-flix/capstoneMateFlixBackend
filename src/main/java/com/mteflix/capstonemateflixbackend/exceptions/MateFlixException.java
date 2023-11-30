@@ -1,11 +1,11 @@
 package com.mteflix.capstonemateflixbackend.exceptions;
 
-public class GemsTubeException extends Throwable {
-    public GemsTubeException(String message){
+public class MateFlixException extends Throwable {
+    public MateFlixException(String message){
         super(message);
     }
 
-    public GemsTubeException(Throwable throwable){
+    public MateFlixException(Throwable throwable){
         super(throwable);
     }
 }

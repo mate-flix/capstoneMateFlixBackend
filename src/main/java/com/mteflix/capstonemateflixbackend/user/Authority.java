@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.models;
+package com.mteflix.capstonemateflixbackend.user;
 
 public enum Authority {
     USER,

@@ -1,8 +1,8 @@
-package africa.semicolon.gemstube.services;
+package com.mteflix.capstonemateflixbackend.auth;
 
-import africa.semicolon.gemstube.exceptions.MediaUploadException;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
+import com.mteflix.capstonemateflixbackend.exceptions.MediaUploadException;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

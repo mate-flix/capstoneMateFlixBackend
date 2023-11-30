@@ -1,6 +1,6 @@
-package africa.semicolon.gemstube.config;
+package com.mteflix.capstonemateflixbackend.config;
 
-import africa.semicolon.gemstube.services.UserService;
+import com.mteflix.capstonemateflixbackend.auth.AuthService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,12 +14,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AppConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(UserService userService){
-        return (username)-> getUserByUsername(userService, username);
+    public UserDetailsService userDetailsService(AuthService authService){
+        return (username)-> getUserByUsername(authService, username);
     }
 
-    private static User getUserByUsername(UserService userService, String username) {
-        var user = userService.getUserBy(username);
+    private static User getUserByUsername(AuthService authService, String username) {
+        var user = authService.getUserBy(username);
         var authorities = user.getAuthorities();
         var userAuthorities =
                 authorities.stream()

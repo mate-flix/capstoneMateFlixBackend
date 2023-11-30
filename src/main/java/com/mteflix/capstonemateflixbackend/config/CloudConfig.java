@@ -1,4 +1,4 @@
-package africa.semicolon.gemstube.config;
+package com.mteflix.capstonemateflixbackend.config;
 
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
