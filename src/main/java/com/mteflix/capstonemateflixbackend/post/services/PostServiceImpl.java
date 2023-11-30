@@ -25,13 +25,12 @@ public class PostServiceImpl implements PostService{
     private final Utils utils;
     @Override
     public PostResponse uploadPostWithPhoto(PostRequest postRequest) throws IOException {
-
         utils.uploadWithPhoto(postRequest);
         return new PostResponse("Apartment Uploaded");
     }
 
     @Override
-    public PostResponse editApartment(PostRequest postRequest) throws IOException {
+    public PostResponse editPostWithPhoto(PostRequest postRequest) throws IOException {
         Optional<Apartment> foundApartment = apartmentRepository.findApartmentByHouseNumberAndId(
                 postRequest.getDetails().getHouseNumber(), postRequest.getDetails().getHouseId());
         if (foundApartment.isEmpty()){
@@ -57,6 +56,7 @@ public class PostServiceImpl implements PostService{
         }
         return new PostResponse("Apartment updated successfully");
     }
+
 
 }
 

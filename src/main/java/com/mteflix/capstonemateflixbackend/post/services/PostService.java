@@ -7,4 +7,5 @@ import java.io.IOException;
 
 public interface PostService {
     PostResponse uploadPostWithPhoto(PostRequest postRequest) throws IOException;
+    PostResponse editPostWithPhoto(PostRequest postRequest) throws IOException;
 }

@@ -6,5 +6,5 @@ import java.io.IOException;
 import java.util.Map;
 
 public interface CloudService {
-    Map<String, String> upload(MultipartFile file) throws IOException;
+    String upload(MultipartFile file) throws IOException;
 }
