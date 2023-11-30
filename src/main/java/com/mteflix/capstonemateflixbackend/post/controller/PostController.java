@@ -32,7 +32,7 @@ public class PostController {
         List<ViewPostResponse> foundPosts = postService.findAllPostsByPoster(postRequest);
         return ResponseEntity.status(HttpStatus.FOUND).body(foundPosts);
     }
-    @DeleteMapping("/delete-post.{post-id}")
+    @DeleteMapping("/delete-post/{post-id}")
     public ResponseEntity<?> deletePost(@RequestBody PostRequest postRequest){
         PostResponse response = postService.deletePost(postRequest);
         return ResponseEntity.status(HttpStatus.OK).body(response);
