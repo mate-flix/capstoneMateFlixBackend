@@ -21,4 +21,5 @@ public class Details {
     private Long houseId;
     private Long userId;
     private String photoUrl;
+    private Long postId;
 }
