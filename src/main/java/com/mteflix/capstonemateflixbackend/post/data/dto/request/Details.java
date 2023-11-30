@@ -20,4 +20,5 @@ public class Details {
     private MultipartFile multipartFile;
     private Long houseId;
     private Long userId;
+    private String photoUrl;
 }
