@@ -4,10 +4,9 @@ import com.mteflix.capstonemateflixbackend.post.data.dto.request.Details;
 import com.mteflix.capstonemateflixbackend.post.data.dto.request.PostRequest;
 import com.mteflix.capstonemateflixbackend.post.data.model.Address;
 import com.mteflix.capstonemateflixbackend.post.data.model.Apartment;
-import com.mteflix.capstonemateflixbackend.post.data.model.Post;
 import com.mteflix.capstonemateflixbackend.post.data.model.User;
 import com.mteflix.capstonemateflixbackend.post.data.repository.AddressRepository;
-import com.mteflix.capstonemateflixbackend.post.data.repository.PostRepository;
+import com.mteflix.capstonemateflixbackend.post.data.repository.ApartmentRepository;
 import com.mteflix.capstonemateflixbackend.post.data.repository.UserRepository;
 import com.mteflix.capstonemateflixbackend.post.exception.PostException;
 import com.mteflix.capstonemateflixbackend.post.services.CloudService;
@@ -16,16 +15,17 @@ import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.Optional;
 
 @RequiredArgsConstructor
 @Component
 public class Utils {
     private final CloudService cloudService;
-    private final PostRepository postRepository;
+    private final ApartmentRepository apartmentRepository;
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
-    public Post uploadWithPhoto(PostRequest postRequest) throws IOException {
+    public void uploadWithPhoto(PostRequest postRequest) throws IOException {
         Optional<User> userId = userRepository.findById(postRequest.getDetails().getUserId());
 
         if (userId.isEmpty()){
@@ -49,23 +49,16 @@ public class Utils {
 
         Apartment apartment = Apartment.builder()
                 .houseType(postRequest.getDetails().getHouseType())
-                .description(postRequest.getDetails().getHouseDescription())
-                .address(address)
-                .id(postRequest.getDetails().getHouseId())
-                .build();
-
-        Post post = Post.builder()
-                .title(postRequest.getDetails().getTitle())
                 .description(postRequest.getDetails().getMainDescription())
+                .address(address)
                 .dateCreated(LocalDateTime.now())
                 .dateUploaded(LocalDateTime.now())
-                .apartment(apartment)
                 .build();
         String url = cloudService.upload(details.getMultipartFile());
         Long uploaderId = userId.get().getId();
 
-        post.setPhotoUrl(url);
-        post.setUserId(uploaderId);
-        return postRepository.save(post);
+        apartment.setPhotoUrl(Collections.singleton(url));
+        apartment.setUserId(uploaderId);
+        apartmentRepository.save(apartment);
     }
 }
