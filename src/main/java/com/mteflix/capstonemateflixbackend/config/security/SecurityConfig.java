@@ -44,7 +44,7 @@ public class SecurityConfig {
                    .addFilterAt(new MateFlixAuthenticationFilter(authenticationManager, jwtService), UsernamePasswordAuthenticationFilter.class)
                    .addFilterBefore(authorizationFilter, MateFlixAuthenticationFilter.class)
                    .authorizeHttpRequests(c->c.requestMatchers(HttpMethod.POST, getPublicEndpoints()).permitAll()
-                           .requestMatchers(HttpMethod.GET, "/api/v1/user", "/api/v1/user/**").hasAnyAuthority(Authority.USER.name()))
+                       .requestMatchers(HttpMethod.GET, "/api/v1/auth", "/api/v1/auth/**").hasAnyAuthority(Authority.USER.name()))
                    .build();
     }
     /**

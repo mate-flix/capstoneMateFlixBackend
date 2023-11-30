@@ -1,6 +1,5 @@
 package com.mteflix.capstonemateflixbackend.config.security.filters;
 
-
 import com.mteflix.capstonemateflixbackend.auth.AuthService;
 import com.mteflix.capstonemateflixbackend.config.security.services.JwtService;
 import com.mteflix.capstonemateflixbackend.config.security.utils.SecurityUtils;
@@ -25,33 +24,33 @@ import java.io.IOException;
 public class MateFlixAuthorizationFilter extends OncePerRequestFilter {
     private final JwtService jwtService;
     private final AuthService authService;
+
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        boolean isRequestToPublicEndpoint = request.getMethod().equals("POST")&&
+        String authorizationHeader = request.getHeader("Authorization");
+        boolean isRequestToPublicEndpoint = request.getMethod().equals("POST") &&
                 SecurityUtils.getPublicEndpoints().contains(request.getServletPath());
 
-//        System.out.println(isRequestToPublicEndpoint);
-//
-//        System.out.println("here" + request.getServletPath());
-        if (isRequestToPublicEndpoint) filterChain.doFilter(request, response);
+        if (isRequestToPublicEndpoint) {
+            filterChain.doFilter(request, response);
+        } else {
+            if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
+                log.info("auth header:: {}", authorizationHeader);
+                String token = authorizationHeader.substring("Bearer ".length());
+                String username = jwtService.extractUsernameFrom(token);
 
-        else {
-            String authorizationHeader = request.getHeader("Authorization"); //Bearer qhgfdhjhdguy636638...
-            log.info("auth header:: {}", authorizationHeader);
-            String token = authorizationHeader.substring("Bearer ".length()); //removing "Bearer "
-            String username = jwtService.extractUsernameFrom(token);
+                log.info("username:: {}", username);
+                User user = authService.getUserBy(username);
+                var authorities = user.getAuthorities().stream()
+                        .map(authority -> new SimpleGrantedAuthority(authority.name()))
+                        .toList();
+                log.info("authorities:: {}", authorities);
+                var authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
 
-            log.info("username:: {}", username);
-            User user = authService.getUserBy(username);
-            var authorities = user.getAuthorities().stream()
-                                  .map(authority -> new SimpleGrantedAuthority(authority.name()))
-                                  .toList();
-            log.info("authorities:: {}", authorities);
-            var authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), null, authorities);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+            }
 
-            SecurityContextHolder.getContext().setAuthentication(authentication);
             filterChain.doFilter(request, response);
         }
-
     }
 }

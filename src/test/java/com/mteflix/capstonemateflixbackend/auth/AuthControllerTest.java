@@ -28,7 +28,8 @@ class AuthControllerTest {
         request.setEmail("timileyin1708@gmail.com");
         request.setFirstName("timileyin");
         request.setLastName("Tunde");
-        mockMvc.perform(post("/api/v1/auth")
+        request.setPassword("timmij");
+        mockMvc.perform(post("/api/v1/auth/register")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(mapper.writeValueAsBytes(request)))
                 .andExpect(status().isOk())
