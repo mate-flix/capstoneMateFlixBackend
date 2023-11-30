@@ -28,4 +28,6 @@ public class Apartment {
     private Long userId;
     @OneToOne
     private Address address;
+    @OneToOne
+    private User owner;
 }

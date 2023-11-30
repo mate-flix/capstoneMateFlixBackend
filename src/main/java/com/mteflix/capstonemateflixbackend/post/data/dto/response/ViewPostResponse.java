@@ -5,10 +5,14 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+@Builder
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
-@Builder
-public class PostResponse {
-    private String message;
+public class ViewPostResponse {
+    private String houseType;
+    private String houseDescription;
+    private String mainDescription;
+    private Long id;
+
 }

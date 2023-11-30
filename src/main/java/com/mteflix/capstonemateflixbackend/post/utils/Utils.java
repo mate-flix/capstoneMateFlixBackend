@@ -26,9 +26,9 @@ public class Utils {
     private final UserRepository userRepository;
     private final AddressRepository addressRepository;
     public void uploadWithPhoto(PostRequest postRequest) throws IOException {
-        Optional<User> userId = userRepository.findById(postRequest.getDetails().getUserId());
+        Optional<User> foundUser = userRepository.findById(postRequest.getDetails().getUserId());
 
-        if (userId.isEmpty()){
+        if (foundUser.isEmpty()){
             throw new PostException("User with id "+postRequest.getDetails().getUserId()+" " +
                     "not found");
         }
@@ -55,10 +55,9 @@ public class Utils {
                 .dateUploaded(LocalDateTime.now())
                 .build();
         String url = cloudService.upload(details.getMultipartFile());
-        Long uploaderId = userId.get().getId();
 
         apartment.setPhotoUrl(Collections.singleton(url));
-        apartment.setUserId(uploaderId);
+        apartment.setOwner(foundUser.get());
         apartmentRepository.save(apartment);
     }
 }
