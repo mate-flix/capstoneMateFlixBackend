@@ -43,7 +43,7 @@ public class Utils {
                 address.getState(), address.getStreet(), address.getHouseNumber()
         );
         if (foundAddress.isPresent()){
-            throw new PostException("House with house number "+address.getHouseNumber()+" already" +
+            throw new PostException("House with house number "+address.getHouseNumber()+" already " +
                     "exist in the same locality");
         }
 

@@ -5,12 +5,13 @@ import com.cloudinary.utils.ObjectUtils;
 import com.mteflix.capstonemateflixbackend.post.config.CloudConfig;
 import com.mteflix.capstonemateflixbackend.post.exception.PostException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.util.Map;
 @RequiredArgsConstructor
-
+@Service
 public class CloudinaryCloudService implements CloudService{
     private final CloudConfig config;
 

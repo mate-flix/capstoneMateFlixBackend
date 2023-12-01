@@ -10,12 +10,10 @@ import org.springframework.web.multipart.MultipartFile;
 @NoArgsConstructor
 @Data
 public class Details {
-    private String title;
     private Long houseNumber;
     private String street;
     private String state;
     private String houseType;
-    private String houseDescription;
     private String mainDescription;
     private MultipartFile multipartFile;
     private Long houseId;
