@@ -2,7 +2,7 @@ package com.mteflix.capstonemateflixbackend.post.utils;
 
 import com.mteflix.capstonemateflixbackend.post.data.dto.request.Details;
 import com.mteflix.capstonemateflixbackend.post.data.dto.request.PostRequest;
-import com.mteflix.capstonemateflixbackend.post.data.model.Address;
+import com.mteflix.capstonemateflixbackend.post.data.dto.response.PostResponse;
 import com.mteflix.capstonemateflixbackend.post.data.model.Apartment;
 import com.mteflix.capstonemateflixbackend.post.data.model.Profile;
 import com.mteflix.capstonemateflixbackend.post.data.model.User;
@@ -10,6 +10,7 @@ import com.mteflix.capstonemateflixbackend.post.data.repository.AddressRepositor
 import com.mteflix.capstonemateflixbackend.post.data.repository.ApartmentRepository;
 import com.mteflix.capstonemateflixbackend.post.data.repository.UserRepository;
 import com.mteflix.capstonemateflixbackend.post.services.CloudService;
+import com.mteflix.capstonemateflixbackend.post.services.PostService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -38,14 +39,15 @@ class UtilsTest {
     private CloudService cloudService;
     @Mock
     private ApartmentRepository apartmentRepository;
+    @Mock
+    private PostService postService;
     @InjectMocks
     private Utils utils;
 
     @Test
-    public void testUploadWithPhoto() throws IOException {
+    public void test_Upload_With_Photo() throws IOException {
         PostRequest postRequest = createTestPostRequest();
         User mockUser = createUser();
-        createMockAddress();
 
         when(userRepository.findById(any())).thenReturn(Optional.of(mockUser));
         when(addressRepository.findAddressByStateAndStreetAndHouseNumber(
@@ -63,6 +65,7 @@ class UtilsTest {
         assertNotNull(savedApartment.getPhotoUrl());
         assertEquals(mockUser, savedApartment.getOwner());
     }
+
     public PostRequest createTestPostRequest() throws IOException {
         Path path = Paths.get("C:\\Users\\GIDEON\\OneDrive\\Desktop\\Capstone Project\\capstoneMateFlixBackend-main\\capstoneMateFlixBackend-main\\src\\" +
                 "main\\java\\com\\mteflix\\capstonemateflixbackend\\post\\utils\\libbyrose.jpg");
@@ -95,12 +98,13 @@ class UtilsTest {
         user.setId(1L);
         return user;
     }
-    public Address createMockAddress(){
-        Address address = new Address();
-        address.setHouseNumber(1L);
-        address.setState("Lagos");
-        address.setStreet("Herbert Macaulay way");
-        address.setId(1L);
-        return address;
+
+    public Apartment sampleApartment(){
+        Apartment apartment = Apartment.builder()
+                .houseType("Bungalow")
+                .description("My bungalow")
+                .id(1L)
+                .build();
+        return  apartment;
     }
 }

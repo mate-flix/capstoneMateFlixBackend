@@ -30,4 +30,6 @@ public class Apartment {
     private Address address;
     @OneToOne
     private User owner;
+    @OneToOne
+    private Comment comment;
 }

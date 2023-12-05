@@ -40,11 +40,11 @@ public class PostServiceImpl implements PostService{
             throw new PostException("Apartment with specified ID does not exist");
         }
 
-        Optional<Apartment> foundPost = apartmentRepository.findById(postRequest.getDetails().getPostId());
-        if (foundPost.isEmpty()){
+        Optional<Apartment> findApartment = apartmentRepository.findById(postRequest.getDetails().getPostId());
+        if (findApartment.isEmpty()){
             throw new PostException("Apartment with specified ID not found");
         }
-        Apartment apartment = foundPost.get();
+        Apartment apartment = findApartment.get();
         apartment.setHouseType(postRequest.getDetails().getHouseType());
         apartment.setDescription(postRequest.getDetails().getMainDescription());
         apartment.setDateUploaded(LocalDateTime.now());
@@ -53,6 +53,7 @@ public class PostServiceImpl implements PostService{
             String newImageUrl = cloudService.upload(postRequest.getDetails().getMultipartFile());
             apartment.setPhotoUrl(Collections.singleton(newImageUrl));
         }
+        apartmentRepository.save(apartment);
         return new PostResponse("Apartment updated successfully");
     }
 
@@ -64,6 +65,15 @@ public class PostServiceImpl implements PostService{
         }
         apartmentRepository.delete(foundPost.get());
         return new PostResponse("Delete successful");
+    }
+
+    @Override
+    public Apartment findPostById(Long id) {
+        Optional<Apartment> foundApartment = apartmentRepository.findById(id);
+        if(foundApartment.isEmpty()){
+            throw new PostException("Apartment with specified ID not found");
+        }
+        return foundApartment.get();
     }
 
 
