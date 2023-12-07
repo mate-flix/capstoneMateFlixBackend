@@ -108,6 +108,14 @@
             <version>1.32.2</version>
         </dependency>
 
+        <!-- https://mvnrepository.com/artifact/com.firework.core.network/web-socket -->
+        <dependency>
+            <groupId>com.firework.core.network</groupId>
+            <artifactId>web-socket</artifactId>
+            <version>8.1.0</version>
+        </dependency>
+
+
         <!--		<dependency>-->
         <!--			<groupId>org.modelmapper</groupId>-->
         <!--			<artifactId>modelmapper-module-java8</artifactId>-->
@@ -122,6 +130,10 @@
             <groupId>org.modelmapper</groupId>
             <artifactId>modelmapper</artifactId>
             <version>3.1.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-websocket</artifactId>
         </dependency>
     </dependencies>
 

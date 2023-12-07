@@ -53,8 +53,9 @@ private final ProfileRepository profileRepository;
         User savedUser = userRepository.save(user);
         EmailRequest emailRequest = new EmailRequest();
        emailRequest.setTo(savedUser.getEmail());
-      emailRequest.setBody("<p>Welcome to mate flix. kindly verify your account\" + savedUser.getToken() + \"or click on this link \" + verificationLink</p>");
-    String verificationLink = "http://api/v1/auth/verify/" + savedUser.getToken();
+        String verificationLink = "http://api/v1/auth/verify/" + savedUser.getToken();
+      emailRequest.setBody("Welcome to mate flix. kindly verify your account. Your verification code is    " + savedUser.getToken() + "    or click on this link    "  + verificationLink);
+
     emailRequest.setSubject("MATE FLIX EMAIL VERIFICATION");
         mateEmailService.sendSimpleMail(emailRequest);
         return new AuthResponse(savedUser.getId());
