@@ -2,8 +2,8 @@ package com.mteflix.capstonemateflixbackend.profile;
 
 import com.mteflix.capstonemateflixbackend.School.School;
 import com.mteflix.capstonemateflixbackend.contactInformation.ContactInformation;
+import com.mteflix.capstonemateflixbackend.user.User;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,7 +14,6 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
 public class Profile {
 
     @Id
@@ -31,4 +30,6 @@ public class Profile {
     @OneToOne
     private ContactInformation contactInformation;
     private String profilePicture;
+    @OneToOne
+    private User user;
 }

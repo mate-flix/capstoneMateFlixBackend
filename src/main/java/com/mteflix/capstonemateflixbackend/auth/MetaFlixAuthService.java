@@ -1,133 +1,101 @@
 package com.mteflix.capstonemateflixbackend.auth;
-import com.mteflix.capstonemateflixbackend.mailConfig.EmailRequest;
-import com.mteflix.capstonemateflixbackend.mailConfig.MateEmailService;
+import com.mteflix.capstonemateflixbackend.mail.EmailRequest;
+import com.mteflix.capstonemateflixbackend.mail.MateEmailService;
 import com.mteflix.capstonemateflixbackend.exceptions.MateFlixException;
-import com.mteflix.capstonemateflixbackend.profile.Profile;
-import com.mteflix.capstonemateflixbackend.profile.ProfileRepository;
+import com.mteflix.capstonemateflixbackend.token.VerificationToken;
+import com.mteflix.capstonemateflixbackend.token.VerificationTokenRepository;
+import com.mteflix.capstonemateflixbackend.user.CreateUserRequest;
 import com.mteflix.capstonemateflixbackend.user.User;
+import com.mteflix.capstonemateflixbackend.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
-
-import com.mteflix.capstonemateflixbackend.user.UserRepository;
 import lombok.AllArgsConstructor;
-
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
-
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 
+
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
-
 import static com.mteflix.capstonemateflixbackend.user.Authority.USER;
+
+
 @Slf4j
 @Service
 @AllArgsConstructor
-public class MetaFlixAuthService implements AuthService{
-    private final UserRepository userRepository;
+public class MetaFlixAuthService implements AuthService {
+
     private final MateEmailService mateEmailService;
     private final ModelMapper modelMapper;
-    private final PasswordEncoder passwordEncoder;
-private final ProfileRepository profileRepository;
+    private final UserService userService;
+    private final VerificationTokenRepository tokenRepository;
 
 
-    // TO DO
-    // EMAIL VERIFICATION
-    // 0AUTH
     @Override
-    public AuthResponse register(AuthRequest registerRequest) {
-        User user = new User();
-        user.setEmail(registerRequest.getEmail());
-        user.setPassword(passwordEncoder.encode(registerRequest.getPassword()));
-        Profile profile = new Profile();
-        profile.setFirstName(registerRequest.getFirstName());
-        profile.setLastName(registerRequest.getLastName());
-        profileRepository.save(profile);
-      user.setProfile(profile);
+    public AuthResponse register(AuthRequest registerRequest) throws MateFlixException {
+
+        CreateUserRequest createUserRequest = modelMapper.map(registerRequest, CreateUserRequest.class);
+        User user = userService.createUser(createUserRequest);
+
         user.setAuthorities(List.of(USER));
-        user.setToken(generateToken());
-        User savedUser = userRepository.save(user);
+        initiateUserVerificationEmail(user.getEmail());
+        return new AuthResponse(user.getId());
+    }
+
+
+
+    public void initiateUserVerificationEmail(String email) throws MateFlixException {
+        Optional<User> user = userService.getUserBy(email);
+        if (user.isEmpty()) {
+            throw new MateFlixException("User not found");
+        }
         EmailRequest emailRequest = new EmailRequest();
-       emailRequest.setTo(savedUser.getEmail());
-        String verificationLink = "http://api/v1/auth/verify/" + savedUser.getToken();
-      emailRequest.setBody("Welcome to mate flix. kindly verify your account. Your verification code is    " + savedUser.getToken() + "    or click on this link    "  + verificationLink);
+        emailRequest.setTo(user.get().getEmail());
 
-    emailRequest.setSubject("MATE FLIX EMAIL VERIFICATION");
+        String verificationLink = "http://localhost:8080/api/v1/auth/verifyEmail?token="+user.get().getToken().getToken();
+        emailRequest.setBody("Welcome to mate flix. kindly verify your account. Your verification code is    " + user.get().getToken().getToken() + "    or click on this link    " + verificationLink);
+
+
+
+        emailRequest.setSubject("MATE FLIX PASSWORD REQUEST");
         mateEmailService.sendSimpleMail(emailRequest);
-        return new AuthResponse(savedUser.getId());
+
+
     }
 
-private String generateToken () {
-        UUID token = UUID.randomUUID();
 
-        return  token.toString().replace("-", "");
+    public ValidateResponse verify(String token) throws MateFlixException {
+        Optional<VerificationToken> theToken = tokenRepository.findVerificationTokensByToken(token);
+        if (theToken.isPresent() && theToken.get().getUser().isEnabled()){
+            throw  new MateFlixException("This account has already been verified, please, login");
+        }
+        String verificationResult = validateToken(token);
+        if (verificationResult.equalsIgnoreCase("valid")){
+            return new ValidateResponse("Email verified successfully. Now you can login to your account");
+        } else {
+       throw new MateFlixException("Invalid verification token");}
+    }
+
+
+    private String validateToken(String theToken) {
+        Optional<VerificationToken> token = tokenRepository.findVerificationTokensByToken(theToken);
+        if(token.isEmpty()){
+            return "Invalid verification token";
+        }
+        User user = token.get().getUser();
+        Calendar calendar = Calendar.getInstance();
+        if ((token.get().getExpirationTime().getTime() - calendar.getTime().getTime()) <= 0){
+            tokenRepository.delete(token.get());
+            return "Token already expired";
+        }
+        user.setEnabled(true);
+        userService.saveUser(user);
+        return "valid";
+    }
+
 }
 
-    public boolean verifyUserEmailByCode(String email, String verificationCode) {
-        // Find the user in the database based on the email and verification code
-        Optional<User> userOptional = userRepository.findByEmailAndToken(email, verificationCode);
 
-        if (userOptional.isPresent()) {
-            // Mark the user as verified
-            User user = userOptional.get();
-            user.setVerified(true);
-            user.setToken(null); // Clear the verification code
-            userRepository.save(user);
-            return true;
-        }
 
-        return false;
-    }
-    public boolean verifyUserEmailByLink(String verificationCode) {
-        // Find the user in the database based on the verification code
-        Optional<User> userOptional = userRepository.findByToken(verificationCode);
 
-        if (userOptional.isPresent()) {
-            // Mark the user as verified
-            User user = userOptional.get();
-            user.setVerified(true);
-            user.setToken(null); // Clear the verification code
-            userRepository.save(user);
-            return true;
-        }
 
-        return false;
-    }
-
-    @Override
-    public User getUserById(Long id) throws MateFlixException {
-        return userRepository.findById(id).orElseThrow(
-                ()-> new MateFlixException(String.format("user with id %d not found", id))
-        );
-    }
-
-    @Override
-    public AuthResponse getUserBy(Long id) throws MateFlixException {
-        User user = getUserById(id);
-        return modelMapper.map(user, AuthResponse.class);
-    }
-
-    @Override
-    public List<AuthResponse> getUsers(int page, int size) {
-        Pageable pageable = PageRequest.of(page-1, size);
-        Page<User> userPage = userRepository.findAll(pageable);
-        List<User> users = userPage.getContent();
-        log.info("users:: {}", users);
-        return users.stream()
-                .map(user->modelMapper.map(user, AuthResponse.class))
-                .toList();
-
-    }
-
-    @Override
-    public User getUserBy(String email)  {
-        return userRepository.findByEmail(email).orElseThrow(()->
-                new RuntimeException(
-                        String.format("user with email %s not found", email)
-                ));
-    }
-}
