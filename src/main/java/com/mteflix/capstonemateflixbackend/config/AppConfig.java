@@ -1,6 +1,7 @@
 package com.mteflix.capstonemateflixbackend.config;
 
 import com.mteflix.capstonemateflixbackend.auth.AuthService;
+import com.mteflix.capstonemateflixbackend.user.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,18 +15,18 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class AppConfig {
 
     @Bean
-    public UserDetailsService userDetailsService(AuthService authService){
-        return (username)-> getUserByUsername(authService, username);
+    public UserDetailsService userDetailsService(UserService userService){
+        return (username)-> getUserByUsername(userService, username);
     }
 
-    private static User getUserByUsername(AuthService authService, String username) {
-        var user = authService.getUserBy(username);
-        var authorities = user.getAuthorities();
+    private static User getUserByUsername(UserService userService, String username) {
+        var user = userService.getUserBy(username);
+        var authorities = user.get().getAuthorities();
         var userAuthorities =
                 authorities.stream()
                         .map(authority -> new SimpleGrantedAuthority(authority.name()))
                         .toList();
-        return new User(username, user.getPassword(), userAuthorities);
+        return new User(username, user.get().getPassword(), userAuthorities);
     }
 
     @Bean

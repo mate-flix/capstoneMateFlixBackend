@@ -1,5 +1,8 @@
 package com.mteflix.capstonemateflixbackend.auth;
 
+import com.mteflix.capstonemateflixbackend.exceptions.MateFlixException;
+
+import com.mteflix.capstonemateflixbackend.token.VerificationTokenRepository;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -8,6 +11,8 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 
 import org.springframework.web.bind.annotation.*;
 
+import static java.rmi.server.LogStream.log;
+import static org.hibernate.internal.CoreLogging.logger;
 import static org.springframework.http.HttpStatus.CREATED;
 
 @RestController
@@ -15,26 +20,17 @@ import static org.springframework.http.HttpStatus.CREATED;
 @AllArgsConstructor
 public class AuthController {
     private final AuthService authService;
+
     @PostMapping("/register")
-    public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRequest request){
+    public ResponseEntity<AuthResponse> register(@Valid @RequestBody AuthRequest request) throws MateFlixException {
         return ResponseEntity.status(HttpStatus.OK).body(authService.register(request));
     }
-    @GetMapping("/verify/{verificationCode}")
-    public ResponseEntity<String> verifyUserEmailByLink(@PathVariable String verificationCode) {
-        if (authService.verifyUserEmailByLink(verificationCode)) {
-            return ResponseEntity.ok("Email verification successful. You can now log in.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid verification code or user not found.");
-        }
-    }
 
-    @PostMapping("/verify")
-    public ResponseEntity<String> verifyUserEmailByCode(@RequestParam String email, @RequestParam String verificationCode) {
-        if (authService.verifyUserEmailByCode(email, verificationCode)) {
-            return ResponseEntity.ok("Email verification successful. You can now log in.");
-        } else {
-            return ResponseEntity.badRequest().body("Invalid verification code or user not found.");
-        }
+
+
+    @GetMapping("/verifyEmail")
+    public ValidateResponse verifyEmail(@RequestParam("token") String token) throws MateFlixException {
+return authService.verify(token);
     }
 
 }
